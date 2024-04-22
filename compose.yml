@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_BACKEND_URL=http://backend:3001
+    depends_on:
+      - catalog-management
+
+  catalog-management:
+    build: ./backend/catalog-management
+    ports:
+      - "3001:3001"
+
+  customer-support:
+    build: ./backend/customer-support
+    ports:
+      - "3002:3002"
+
+  order-processing:
+    build: ./backend/order-processing
+    ports:
+      - "3003:3003"
+
+  db:
+    image: postgres:12
+    environment:
+      POSTGRES_DB: appdb
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:
+
+networks:
+  default:
+    driver: bridge
